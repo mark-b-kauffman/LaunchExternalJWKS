@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>External Launch</title>
+</head>
+<body>
+  <link rel="stylesheet" href="/static/style.css">
+    <header>
+      <h1>
+        Launch External
+      </h1>
+    </header>
+    <hr />
+    <p>
+      Welcome to LaunchExternal. 
+    </p>
+    <p><b>Make certain your browser allows pop ups and redirects from this Learn server.</b></p>
+    Launching to {{launch_url}} in a new window. Close it and this panel when you are through.
+    <script>
+         window.open('{{ launch_url }}') 
+    </script>
+
+</body>
+</html>
