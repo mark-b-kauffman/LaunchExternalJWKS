@@ -6,7 +6,7 @@ To configure:
 
 ## app/lti.json, app/private.key, and app/Config.py
 
-This [document](https://docs.blackboard.com/standards/PyLTI1p3WithBlackboardLearn.html) shows how to configure the PyLTI1.3 library, which is done through the `configs`directory.
+This [document](https://docs.blackboard.com/standards/lti/tutorials/py-lti-1p3) shows how to configure the PyLTI1.3 library, which is done through the `configs`directory. The specifics for this code are given in the lti-template.json/lti.json instructions following. (In the tutorial document the file name is game.json.)
 
 ## ConfigTemplate.py
 
@@ -61,6 +61,8 @@ $ docker build -t launch-external:0.1 .
 Now run it. From the terminal, type:
 $ docker run -p 5000:5000 --rm --name LaunchExternal launch-external:0.1
 
+NOTE: When you host this LTI application on a remote server the app MUST have it's own unique subdomain. I.E. you must use something like https://launchexternal.myschool.edu/ or https://launchexternal.apps.myschool.edu/ as the root path to the tool. Per the LTI specification you can NOT use https://myschoolapps.myschool.edu/launchexternal/ where launchexternal is one of the many apps you have under the root.
+
 ## On your Learn server
 Register the LTI 1.3 tool with your client_id.
 Create a "Course content tool" managed placment for the URL you want to launch to with a custom parameter external_url= to where you want to launch.
@@ -74,7 +76,7 @@ Example:
 ```
 
 Note that the url will be escaped by Learn to be:external_url=https://www.foodies.com?user=@X@user.id@X@
-You need to input the = sign after user as %3D, because Learn will not accept an = there as it thinks that is another custom parameter.
+You need to input the = sign after user as %3D, because Learn will not accept an = there as it thinks that is another custom parameter. I.E. You input external_url=https://www.foodies.com?user%3D@X@user.id@X@ and when you hit submit Learn parses that, replacing the %3D with the = sign.
 
 You can do the same to create custom launches from system tool or administration tool links.
 You can use any of the @X@ template variables described here in your launch:
