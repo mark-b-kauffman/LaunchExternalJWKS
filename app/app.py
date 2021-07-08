@@ -178,6 +178,9 @@ def launch():
     }
     
     """ 
+    We are now going to not do the following. We are going to launch to the external page here. 
+    NO 3LO!!
+
     We could do the launch to the external page here. The following which does the 3LO with REST APIs
     back to the Learn system is not necessary. It's an artifact of project this one was leveraged from.
     We left it here for the most part to demonstrate how one can pass data through the 3LO process
@@ -210,13 +213,14 @@ def launch():
 
     get_authcode_url = learn_url + '/learn/api/public/v1/oauth2/authorizationcode?' + encodedParams
 
-    print("authcode_URL: " + get_authcode_url, flush=True)
+    print("NOT USING: authcode_URL: " + get_authcode_url, flush=True)
 
-    return(redirect(get_authcode_url))
+    # return(redirect(get_authcode_url))
+    return render_template('external.html', launch_url=external_url)
 
 @app.route('/authcode/', methods=['GET', 'POST'])
 def authcode():
-    
+    # we are going to stop coming here to avoid any issues that may be caused by 3LO.
     authcode = request.args.get('code', '')
     base64_message = request.args.get('state', '')
     base64_bytes = base64_message.encode('ascii')
