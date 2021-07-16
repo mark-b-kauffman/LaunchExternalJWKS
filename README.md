@@ -71,7 +71,7 @@ NOTE: When you host this LTI application on a remote server the app MUST have it
 
 By default, the tool will show an intermediate (interstitial page) when launching the external link, this is to warn the users that they're going out of Blackboard Learn, however, if you want to disable this setting and redirect the users to the external page in the same browser tab, you need to add to the parameters of the placement the following line:
 
-disable_intertitial=True
+disable_interstitial=True
 
 You can modify the external.html file (located in app/templates) with the custom warning you want to show to your users, or, create a link in the page instead of opening the external page as a popup (some users could miss the popup notification.)
 
