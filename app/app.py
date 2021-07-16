@@ -167,7 +167,7 @@ def launch():
     launch_data_storage = get_launch_data_storage()
     message_launch = ExtendedFlaskMessageLaunch(flask_request, tool_conf, launch_data_storage=launch_data_storage)
     message_launch_data = message_launch.get_launch_data()
-    pprint.pprint(message_launch_data)
+    #pprint.pprint(message_launch_data)
 
     tpl_kwargs = {
         'page_title': PAGE_TITLE,
@@ -180,7 +180,6 @@ def launch():
     """ 
     We are now going to not do the following. We are going to launch to the external page here. 
     NO 3LO!!
-
     We could do the launch to the external page here. The following which does the 3LO with REST APIs
     back to the Learn system is not necessary. It's an artifact of project this one was leveraged from.
     We left it here for the most part to demonstrate how one can pass data through the 3LO process
@@ -193,9 +192,14 @@ def launch():
     https://stackabuse.com/encoding-and-decoding-base64-strings-in-python/
     """
 
+    disable_interstitial = False
     learn_url = message_launch_data['https://purl.imsglobal.org/spec/lti/claim/tool_platform']['url'].rstrip('/')
-    # MUST include a custom parameter like 'external_url=https://www.foodies.com' in the custom params
+    
+    #MUST include a custom parameter like 'external_url=https://www.foodies.com' in the custom params
+    #Since no authentication is being done, you can choose to leave the user=@X@user.id@X@ param in the custom parameters of the tool.
     external_url = message_launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']['external_url'].rstrip('/')
+    if "disable_interstitial" in message_launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']:
+        disable_interstitial = message_launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']['disable_interstitial'].rstrip('/')
     state = str(uuid.uuid4()) + f'&launch_url={external_url}'
     message_bytes = state.encode('ascii')
     base64_bytes = base64.b64encode(message_bytes)
@@ -209,13 +213,25 @@ def launch():
         'state' : base64_message
     }
 
+    """
+    By default, the tool will show an interstitial page with additional information (such as "Be careful, you're leaving Blackboard")
+    If you want to remove this page and redirect directly to the external page, you need to add an additional parameter to the placement with the following information
+    disable_interstitial=True
+    You can modify the file external.html in the templates folder with the information you need to show to the users as warning, keeping in mind that you need 
+    to leave the window.open line within the script tags or create a link the users can click to avoid issues with popup blockers
+    """
+
+    if disable_interstitial == "True":
+        return(redirect(external_url))
+    
     encodedParams = urllib.parse.urlencode(params)
 
     get_authcode_url = learn_url + '/learn/api/public/v1/oauth2/authorizationcode?' + encodedParams
 
-    print("NOT USING: authcode_URL: " + get_authcode_url, flush=True)
-
-    # return(redirect(get_authcode_url))
+    #Used for 3LO authentication
+    #print("NOT USING: authcode_URL: " + get_authcode_url, flush=True)
+    #return(redirect(get_authcode_url))
+    
     return render_template('external.html', launch_url=external_url)
 
 @app.route('/authcode/', methods=['GET', 'POST'])
