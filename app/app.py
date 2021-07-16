@@ -186,7 +186,7 @@ def launch():
     using the state parameter. The state is an opaque value that doesn't get modified by the 
     developer portal or by Learn. We take the external URL that will be launched to and include it as
     a portion of the state to be pulled out on the other side of 3LO. It's the only way across. 
-    Attempts to pass the data by adding an additional parameter to the requestß for a authroization code
+    Attempts to pass the data by adding an additional parameter to the request for a authroization code
     will fail because those will be dropped. I.E setting your redirect_uri to .../authcode/?launch_url=URL
     does not work.
     https://stackabuse.com/encoding-and-decoding-base64-strings-in-python/
@@ -217,7 +217,7 @@ def launch():
     By default, the tool will show an interstitial page with additional information (such as "Be careful, you're leaving Blackboard")
     If you want to remove this page and redirect directly to the external page, you need to add an additional parameter to the placement with the following information
     disable_interstitial=True
-    You can modify the file external.html in the templates folder with the information you need keeping in mind that you need 
+    You can modify the file external.html in the templates folder with the information you need to show to the users as warning, keeping in mind that you need 
     to leave the window.open line within the script tags or create a link the users can click to avoid issues with popup blockers
     """
 
