@@ -169,79 +169,20 @@ def launch():
     message_launch_data = message_launch.get_launch_data()
     pprint.pprint(message_launch_data)
 
-    tpl_kwargs = {
-        'page_title': PAGE_TITLE,
-        'is_deep_link_launch': message_launch.is_deep_link_launch(),
-        'launch_data': message_launch.get_launch_data(),
-        'launch_id': message_launch.get_launch_id(),
-        'curr_user_name': message_launch_data.get('name', '')
-    }
-    
-    """ 
-    We are now going to not do the following. We are going to launch to the external page here. 
-    NO 3LO!!
+    #MUST include a custom parameter like 'external_url=https://www.foodies.com' in the custom params
+    #Since no authentication is being done, you can choose to leave the user=@X@user.id@X@ param in the custom parameters of the tool.
+    external_url = message_launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']['external_url'].rstrip('/')
+    print("Redirecting to: " + external_url)
+    return(redirect(external_url))
 
-    We could do the launch to the external page here. The following which does the 3LO with REST APIs
-    back to the Learn system is not necessary. It's an artifact of project this one was leveraged from.
-    We left it here for the most part to demonstrate how one can pass data through the 3LO process
-    using the state parameter. The state is an opaque value that doesn't get modified by the 
-    developer portal or by Learn. We take the external URL that will be launched to and include it as
-    a portion of the state to be pulled out on the other side of 3LO. It's the only way across. 
-    Attempts to pass the data by adding an additional parameter to the request for a authroization code
-    will fail because those will be dropped. I.E setting your redirect_uri to .../authcode/?launch_url=URL
-    does not work.
-    https://stackabuse.com/encoding-and-decoding-base64-strings-in-python/
+    """
+    If you want to show an interstitial page with additional information (such as "Be careful, you're leaving Blackboard")
+    You need to comment the line above "return(redirect(external_url))"and uncomment the line below.
+    You can modify the file external.html in the templates folder with the information you need keeping in mind that you need 
+    to leave the window.open line within the script tags or create a link the users can click to avoid issues with popup blockers
     """
 
-    learn_url = message_launch_data['https://purl.imsglobal.org/spec/lti/claim/tool_platform']['url'].rstrip('/')
-    # MUST include a custom parameter like 'external_url=https://www.foodies.com' in the custom params
-    external_url = message_launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']['external_url'].rstrip('/')
-    state = str(uuid.uuid4()) + f'&launch_url={external_url}'
-    message_bytes = state.encode('ascii')
-    base64_bytes = base64.b64encode(message_bytes)
-    base64_message = base64_bytes.decode('ascii')
-
-    params = {
-        'redirect_uri' : Config.config['app_url'] + '/authcode/',
-        'response_type' : 'code',
-        'client_id' : Config.config['learn_rest_key'],
-        'scope' : '*',
-        'state' : base64_message
-    }
-
-    encodedParams = urllib.parse.urlencode(params)
-
-    get_authcode_url = learn_url + '/learn/api/public/v1/oauth2/authorizationcode?' + encodedParams
-
-    print("NOT USING: authcode_URL: " + get_authcode_url, flush=True)
-
-    # return(redirect(get_authcode_url))
-    return render_template('external.html', launch_url=external_url)
-
-@app.route('/authcode/', methods=['GET', 'POST'])
-def authcode():
-    # we are going to stop coming here to avoid any issues that may be caused by 3LO.
-    authcode = request.args.get('code', '')
-    base64_message = request.args.get('state', '')
-    base64_bytes = base64_message.encode('ascii')
-    message_bytes = base64.b64decode(base64_bytes)
-    state = message_bytes.decode('ascii')
-    launch_url = state.split("&launch_url=",1)[1]
-
-    print ("authcode: " + authcode, flush=True)
-    print ("base64_message: " + base64_message, flush=True)
-    print ("state: " + state, flush=True)
-    print ("launch_url: " + launch_url, flush=True)
-    
-    
-    restAuthController = RestAuthController.RestAuthController(authcode)
-    restAuthController.setToken()
-    token = restAuthController.getToken()
-    uuid = restAuthController.getUuid()
-
-    login_user(User(uuid))
-
-    return render_template('external.html', launch_url=launch_url)
+    #return render_template('external.html', launch_url=external_url)
 
 if __name__ == '__main__':
     restAuthController = None

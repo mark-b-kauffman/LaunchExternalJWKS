@@ -6,4 +6,4 @@ RUN pip install -r /tmp/requirements.txt
 COPY ./app /app
 ADD gunicorn_config.py /gunicorn_config.py
 EXPOSE 5000
-ENTRYPOINT ["gunicorn", "--config", "/gunicorn_config.py", "wsgi:app"]
+ENTRYPOINT ["python3", "app.py"]
