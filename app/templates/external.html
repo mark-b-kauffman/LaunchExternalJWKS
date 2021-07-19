@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LaunchExternal Default</title>
+    <title>Launch External</title>
   </head>
   <body>
     <link rel="stylesheet" href="/static/style.css" />
@@ -13,9 +13,9 @@
     <hr />
     <p>Welcome to LaunchExternal - Default Launch</p>
     {% autoescape false %} Launching to
-    <a href="{{launch_url}}" id="target_url">{{launch_url}}</a> in a new window.
-    Close it and this panel when you are through or click the link if the page
-    was not automatically launched {% endautoescape %}
+    <a href="{{launch_url}}">{{launch_url}}</a> in a new window. Close it and
+    this panel when you are through or click the link if the page was not
+    automatically launched {% endautoescape %}
     <script>
       {% autoescape false %}
       window.open("{{ launch_url }}");
