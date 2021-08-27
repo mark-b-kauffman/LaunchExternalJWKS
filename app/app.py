@@ -106,9 +106,15 @@ def get_lti_config_path():
 def get_launch_data_storage():
     return FlaskCacheDataStorage(cache)
 
-
+"""
+    The following looks like a remenant from the original project and doesn't
+    seem to be used here. See the following. We have no configs directory.
+    https://github.com/dmitry-viskov/pylti1.3-flask-example/blob/master/game/app.py
+"""
 def get_jwk_from_public_key(key_name):
+    print('ENTER get_jwk_from_public_key', flush=True)
     key_path = os.path.join(app.root_path, '..', 'configs', key_name)
+    print('key_path' + key_path, flush=True)
     f = open(key_path, 'r')
     key_content = f.read()
     jwk = Registration.get_jwk(key_content)
@@ -139,7 +145,7 @@ def test():
 
 @app.route('/jwks/', methods=['GET'])
 def get_jwks():
-    print('Enter get_jwks()')
+    print('Enter get_jwks()', flush=True)
     tool_conf = ToolConfJsonFile(get_lti_config_path())
     return jsonify({'keys': tool_conf.get_jwks()})
 
