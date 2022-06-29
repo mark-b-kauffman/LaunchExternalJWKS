@@ -4,9 +4,9 @@ This project is set up to demonstrate the use of LTI 1.3 in Python to replace la
 
 To configure:
 
-## app/lti.json, app/private.key, and app/Config.py
+## app/lti.json, app/private.key, app/public.key, and app/Config.py
 
-This [document](https://docs.blackboard.com/standards/lti/tutorials/py-lti-1p3) shows how to configure the PyLTI1.3 library, which is done through the `configs`directory. The specifics for this code are given in the lti-template.json/lti.json instructions following. (In the tutorial document the file name is game.json.)
+This [document](https://docs.blackboard.com/lti/tutorials/py-lti-1p3) shows how to configure the PyLTI1.3 library, which is done through the `configs`directory. This project has no configs directory. Instead, all configuration is in files in the app directory.
 
 ## ConfigTemplate.py
 
