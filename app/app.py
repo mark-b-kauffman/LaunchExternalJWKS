@@ -194,8 +194,11 @@ def launch():
 
     target_link_uri = message_launch_data['https://purl.imsglobal.org/spec/lti/claim/target_link_uri'].rstrip('/')
     pprint.pprint(target_link_uri)
-    #parse that then see if it was /external/ if so we use that target vs. using /launch/ which is also the redirect_uri.
+    #If the target_link_uri contains anthology then the launch wants us to go there.
     parse_tl_uri = urlparse(target_link_uri)
+    if "anthology" in target_link_uri:
+        return(redirect(target_link_uri))
+
 
     tpl_kwargs = {
         'page_title': PAGE_TITLE,
@@ -263,10 +266,10 @@ def launch():
     # Instead we use the following to "launch" to the external page.
     return render_template('external.html', launch_url=external_url)
 
-@app.route('/external/', methods=['HEAD','GET','POST'])
+@app.route('/anthology/', methods=['HEAD','GET','POST'])
 def external():
-    #Intentional for simplicity. If you use the target_link_uri of external, all roads lead to...
-    return render_template('external.html', launch_url="https://www.microsoft.com")
+    #Intentional for simplicity. If you use the target_link_uri of anthology then..
+    return render_template('external.html', launch_url="https://www.anthology.com/")
 
 
 @app.route('/authcode/', methods=['GET', 'POST'])
