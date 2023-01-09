@@ -55,7 +55,14 @@ openssl rsa -in private.key -pubout -out public.key
 
 ## To Run
 
-First run `pip install -r requirements.txt` and then `python app.py` or if you are using heroku, just check in the code to your dyno.
+First run `pip install -r requirements.txt` and then `python app.py` or if you are using heroku, just check in the code to your dyno. We recommend using venv as follows in the root directory of the project:
+```
+% python3 -m venv env
+% source env/bin/activate
+% python3 -m pip install -r requirements.txt
+% cd app
+% python3 app.py
+```
 
 OR
 Use the included Dockerfile and the following. The assumption is that you have Docker desktop an ngrok on your development system.
