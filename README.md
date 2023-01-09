@@ -54,7 +54,7 @@ openssl rsa -in private.key -pubout -out public.key
 ```
 
 ## To Run
-
+RUN DIRECTLY ON YOUR MACHINE
 First run `pip install -r requirements.txt` and then `python app.py` or if you are using heroku, just check in the code to your dyno. We recommend using venv as follows in the root directory of the project:
 ```
 % python3 -m venv env
@@ -65,9 +65,9 @@ First run `pip install -r requirements.txt` and then `python app.py` or if you a
 ```
 Next we can expose the tool running on the localhost using ngrok similar to the following. You will need your own ngrok.io login and configuratoin. See their website for instructions.
 ```
-% ngrok http -region=us -hostname=bbdn-lti.ngrok.io 3001
+% ngrok http -region=us -hostname=launchexternal.ngrok.io 5000
 ```
-OR
+OR USE DOCKER
 Use the included Dockerfile and the following. The assumption is that you have Docker desktop an ngrok on your development system.
 
 Start your ngrok tunnel. Example:
