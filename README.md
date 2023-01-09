@@ -63,7 +63,10 @@ First run `pip install -r requirements.txt` and then `python app.py` or if you a
 % cd app
 % python3 app.py
 ```
-
+Next we can expose the tool running on the localhost using ngrok similar to the following. You will need your own ngrok.io login and configuratoin. See their website for instructions.
+```
+% ngrok http -region=us -hostname=bbdn-lti.ngrok.io 3001
+```
 OR
 Use the included Dockerfile and the following. The assumption is that you have Docker desktop an ngrok on your development system.
 
