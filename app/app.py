@@ -161,9 +161,26 @@ def login():
         raise Exception('Missing "target_link_uri" param')
 
     oidc_login = FlaskOIDCLogin(flask_request, tool_conf, launch_data_storage=launch_data_storage)
+    '''
+    Notice below that we used to tell the oidc_login to redirect to the target_link_uri. 
+    This means that the target_link_uri MUST be one of the Tool Redirect URLs we've registered 
+    for the tool on the developer portal.
+
+    Now we've changed that to use the redirect_uri that we registered, /launch/
+
+    This Tool can use custom parameters to direct the flow of the application after the oidc login.
+    We are using custom parameters for this demo application. And we also demonstrate the use of the target_link_uri
+
+    Quote: "After discussing this with the LTI working group, the consensus is tools should 
+    NOT use target_link_uri if they can help it. Since LTI provides more context than a standard OIDC flow,
+    it’s safer and less work to use the data already contained in the launch, such as resourceId 
+    and/or custom params. The target_link_uri approach can work, but then it’s yet another external URL
+    they have to secure" (Preston 10/28/2019).
+
+    '''
     return oidc_login\
         .enable_check_cookies()\
-        .redirect(target_link_uri)
+        .redirect(Config.config['app_url'] + '/launch/')
 
 
 @app.route('/launch/', methods=['HEAD','GET','POST'])
@@ -175,6 +192,11 @@ def launch():
     message_launch_data = message_launch.get_launch_data()
     #pprint.pprint(message_launch_data)
 
+    target_link_uri = message_launch_data['https://purl.imsglobal.org/spec/lti/claim/target_link_uri'].rstrip('/')
+    pprint.pprint(target_link_uri)
+    #parse that then see if it was /external/ if so we use that target vs. using /launch/ which is also the redirect_uri.
+    parse_tl_uri = urlparse(target_link_uri)
+
     tpl_kwargs = {
         'page_title': PAGE_TITLE,
         'is_deep_link_launch': message_launch.is_deep_link_launch(),
@@ -184,9 +206,10 @@ def launch():
     }
     
     """ 
-    We are now going to not do the following. We are going to launch to the external page here. 
-    NO 3LO!!
-    We could do the launch to the external page here. The following which does the 3LO with REST APIs
+    In this LaunchExternal demo we do NOT do the following with REST 3LO. We are going to launch to the external page here. 
+    With NO REST 3LO!! We have left the setup for future reference.
+    We only do the launch to the external page here. 
+    We dp that and have commented out the part that does the 3LO with REST APIs
     back to the Learn system is not necessary. It's an artifact of project this one was leveraged from.
     We left it here for the most part to demonstrate how one can pass data through the 3LO process
     using the state parameter. The state is an opaque value that doesn't get modified by the 
@@ -234,11 +257,17 @@ def launch():
 
     get_authcode_url = learn_url + '/learn/api/public/v1/oauth2/authorizationcode?' + encodedParams
 
-    #Used for 3LO authentication
+    #The following was used for 3LO authentication. We're leaving this out for LaunchExternal
     #print("NOT USING: authcode_URL: " + get_authcode_url, flush=True)
     #return(redirect(get_authcode_url))
-    
+    # Instead we use the following to "launch" to the external page.
     return render_template('external.html', launch_url=external_url)
+
+@app.route('/external/', methods=['HEAD','GET','POST'])
+def external():
+    #Intentional for simplicity. If you use the target_link_uri of external, all roads lead to...
+    return render_template('external.html', launch_url="https://www.microsoft.com")
+
 
 @app.route('/authcode/', methods=['GET', 'POST'])
 def authcode():
