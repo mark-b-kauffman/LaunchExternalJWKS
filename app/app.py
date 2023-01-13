@@ -186,10 +186,7 @@ def launch():
     launch_data_storage = get_launch_data_storage()
     message_launch = ExtendedFlaskMessageLaunch(flask_request, tool_conf, launch_data_storage=launch_data_storage)
     message_launch_data = message_launch.get_launch_data()
-    #pprint.pprint(message_launch_data)
-
     target_link_uri = message_launch_data['https://purl.imsglobal.org/spec/lti/claim/target_link_uri'].rstrip('/')
-    pprint.pprint(target_link_uri)
     #If the target_link_uri contains anthology then the launch wants us to go there.
     parse_tl_uri = urlparse(target_link_uri)
     if "anthology" in target_link_uri:
