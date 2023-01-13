@@ -49,7 +49,7 @@ class ReverseProxied(object):
         return self.app(environ, start_response)
 
 
-app = Flask('ultra-extension-framework-sample', template_folder='templates', static_folder='static')
+app = Flask('LaunchExternalJWKS', template_folder='templates', static_folder='static')
 
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 
@@ -77,7 +77,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-PAGE_TITLE = 'Ultra Extension Framework Sample'
+PAGE_TITLE = 'LaunchExternalJWKS'
 
 class User(UserMixin):
 
@@ -141,7 +141,7 @@ def load_user(user_id):
 
 @app.route('/', methods=['GET'])
 def test():
-    return('<h1>Your docker container is sucessfully being served by ngrok from your desktop!</h1>')
+    return('<h1>Your Python application is sucessfully being served by ngrok from your desktop!</h1>')
 
 @app.route('/jwks/', methods=['GET'])
 def get_jwks():
@@ -198,7 +198,7 @@ def launch():
     parse_tl_uri = urlparse(target_link_uri)
     if "anthology" in target_link_uri:
         return(redirect(target_link_uri))
-
+    #else carry on assuming that the target_link_uri is the same as the redirect_uri
 
     tpl_kwargs = {
         'page_title': PAGE_TITLE,
