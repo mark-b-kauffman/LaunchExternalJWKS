@@ -162,11 +162,7 @@ def login():
 
     oidc_login = FlaskOIDCLogin(flask_request, tool_conf, launch_data_storage=launch_data_storage)
     '''
-    Notice below that we used to tell the oidc_login to redirect to the target_link_uri. 
-    This means that the target_link_uri MUST be one of the Tool Redirect URLs we've registered 
-    for the tool on the developer portal.
-
-    Now we've changed that to use the redirect_uri that we registered, /launch/
+    Below we've changed the redirect to use the redirect_uri that we registered, <app_url>/launch/
 
     This Tool can use custom parameters to direct the flow of the application after the oidc login.
     We are using custom parameters for this demo application. And we also demonstrate the use of the target_link_uri
